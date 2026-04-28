@@ -1,0 +1,61 @@
+# Python bytecode / cache
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test / coverage artifacts
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# Type checker / linter caches
+.mypy_cache/
+.ruff_cache/
+.pyright/
+
+# Logs
+*.log
+logs/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment / secrets (never commit)
+.env
+.env.*
+!.env.example
+
+# Keys / certificates / credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+*.der
+credentials*.json
+*secret*
+*apikey*
+*api_key*
+
+# Local databases / state
+*.sqlite3
+*.db
+

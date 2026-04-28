@@ -1,0 +1,61 @@
+# pyproject.toml — central configuration for pytest, ruff, and bandit.
+# This is the modern Python standard (PEP 517/518) replacing setup.cfg, pytest.ini, etc.
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+# Where pytest looks for tests
+testpaths = ["tests"]
+
+# "auto" means every async def test_* is handled by pytest-asyncio automatically.
+# Without this, each async test would need an @pytest.mark.asyncio decorator.
+asyncio_mode = "auto"
+
+# Custom markers let you run a specific tier: pytest -m unit
+markers = [
+    "unit: fast, isolated unit tests (no DB, no network)",
+    "integration: tests that require a running DB or external service",
+    "smoke: lightweight sanity checks against a live deployment",
+    "load: Locust-based load/performance tests",
+]
+
+# Show the 10 slowest tests after each run — useful for spotting bottlenecks early
+# and for explaining test performance in interviews.
+addopts = "--tb=short --durations=10"
+
+# ---------------------------------------------------------------------------
+# ruff — linter and formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (undefined names, unused imports)
+    "I",   # isort (import ordering)
+    "S",   # flake8-bandit security rules (hardcoded passwords, use of exec, etc.)
+    "B",   # flake8-bugbear (common subtle bugs)
+    "UP",  # pyupgrade (enforce modern Python 3.12 syntax)
+]
+# S101 flags `assert` statements — acceptable in tests, so we ignore it there.
+# S105/S106 flag hardcoded passwords — we allow in test fixtures only.
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+
+# ---------------------------------------------------------------------------
+# bandit — static security analysis
+# ---------------------------------------------------------------------------
+[tool.bandit]
+# Only scan production and simulator code; skip tests (intentional patterns there).
+targets = ["app", "log_generator"]
+exclude_dirs = ["tests", ".venv", "venv"]
+# Severity and confidence thresholds: report medium+ severity, medium+ confidence.
+# This avoids noise from very low-confidence findings while catching real issues.
+severity = "medium"
+confidence = "medium"
